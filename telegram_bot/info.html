@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram WebApp Parameter Extraction</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #wheel-container {
+            position: relative;
+            width: 80vw;
+            height: 80vw;
+            max-width: 400px;
+            max-height: 400px;
+        }
+        #wheel {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://kulushey.com/kulushi/201777.png');
+            background-size: cover;
+            border-radius: 50%;
+            transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+        .line {
+            position: absolute;
+            width: 2px;
+            height: 50%;
+            background-color: red;
+            top: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+        }
+        #indicator {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid Green;
+        }
+        #start-btn {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 80vw;
+            max-width: 300px;
+        }
+        #story{
+             margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 80vw;
+            max-width: 300px; 
+        }
+        #start-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #winning-message {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+        /* Fullscreen Buzz */
+        #christmas-buzz {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+        }
+        #christmas-buzz img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: auto;
+        }
+        .hide{
+            display : none;
+        }
+
+        #main_page{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            
+            width: 100%;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        #contact_page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #f8d7da; /* Light red background color */
+   }
+        
+        .login-form, .contact-us {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-form input {
+            margin-bottom: 15px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .login-form button {
+            padding: 10px;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .login-form button:hover {
+            background-color: #218838;
+        }
+         
+               /* Styling for the form container */
+        #phone_page {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Adds a shadow for a 3D effect */
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Input field styling */
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        /* Input hover effect */
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Button styling */
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        /* Button hover effect */
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Mobile responsive styles */
+        @media (max-width: 600px) {
+            .page {
+                padding: 30px;
+                max-width: 90%;
+            }
+            .btn {
+                font-size: 16px;
+            }
+            .form-control {
+                font-size: 14px;
+            }
+        }
+        
+                /* Styling for the message container */
+        #expire_page {
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Adds a shadow for a 3D effect */
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px; 
+        }
+        #new_year{
+             background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+            padding-bottom: 15px;
+            margin-bottom:50px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Adds a shadow for a 3D effect */
+            
+            width: 100%;
+            text-align: center;
+            font-size: 18px; 
+        }
+        
+        #tt{
+            width: 100%;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Ensure title stays at the top */
+            align-items: center;
+            background-color: #f4f4f4;
+
+        }
+      /* Styling for the title */
+        #title {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #3498db;
+            color: white;
+            padding: 15px 30px;
+            font-size: 24px;
+            font-weight: bold;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+ 
+ .table-container {
+    margin: 20px;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 18px;
+    min-width: 400px;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.styled-table thead tr {
+    background-color: #4CAF50;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    border: 1px solid #dddddd;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #4CAF50;
+}
+    </style>
+</head>
+<body>
+    
+ 
+   
+    <!-- Title -->
+    <div id="title">
+       Merkato Pro
+    </div>
+
+    <div id = "loading_page" class = "page">Loading</div>
+    <div id = "phone_page" class = "page hide">
+        <form id="login-form">
+           <div class="form-group">
+               <input type="text" class="form-control" placeholder="Phone Number" id="phone" required>
+             </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+    
+    <div id = "expire_page" class = "page hide">
+       
+        <h1 style = "color:orange">The link is Expired!!</h1>
+        </div>
+    <div id = "contact_page" class = "page hide">
+            <div class="error-message">
+        <h2>Phone Number Not Registered</h2>
+        <p>The phone number you entered is not registered in our database.</p>
+        <p>contact us at <a href="#" class="phone-link">0943-090921</a>.</p>
+    </div>
+    </div>
+    <div id = "error_page" class = "page hide">Some Thing Error Happen!</div>
+    
+    <div id = "main_page" class = "page hide">
+            <div class="table-container">
+        <table id="dynamic-table" class="styled-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Table rows will be generated here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    
+    <div id="response"></div>
+    <!-- Include the Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    
+    
+    <script>
+        $(document).ready(function() {
+                    // Check if the Telegram WebApp SDK is loaded
+                
+        
+        let startParam = 0;
+        let telegramId = 0;
+        let telegramName = "name";
+        let userName = "user";
+        let userId = 0;
+        
+        // The array of objects
+const products = [
+    { name: "smart7 HD", price: 8300 },
+    { name: "Pop7 64/2", price: 8500 },
+    { name: "Pop8 128/4", price: 11200 },
+    { name: "Pop8 64/3", price: 9400 },
+    { name: "Pop9 64/3", price: 9600 },
+    { name: "A05s 128/4", price: 14400 },
+    { name: "A05s 128/6", price: 15700 },
+    { name: "M14 64/4", price: 11800 },
+    { name: "Smart8 64/4", price: 9700 },
+    { name: "A04e 32/3", price: 9700 },
+    { name: "A15 128/6", price: 17100 },
+    { name: "A15 128/4", price:16100 },
+    { name: "A25 256/8", price: 25700 },
+    { name: "Hot40i 128/4", price: 12500 },
+    { name: "Spark20 128/4", price: 12700 },
+    { name: "A54 256/8", price: 37000 },
+    { name: "F54 256/8", price: 32500 }
+];
+        
+        
+        
+    
+            const mainpage = document.getElementById('main_page');
+            
+        
+        if (Telegram.WebApp) {
+            // Initialize Telegram WebApp
+            Telegram.WebApp.ready();
+            
+             startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
+              const user = Telegram.WebApp.initDataUnsafe.user;
+            //alert("hello "+startParam);
+
+               telegramId = user.id ;
+               telegramName=user.first_name;
+               userName = user.username;
+
+
+            // Optionally, expand the WebApp to fill the screen
+            //Telegram.WebApp.expand();
+        } else {
+            alert('Telegram WebApp SDK not loaded.'); 
+        }
+           // $('#sendData').on('click', function() {
+                Telegram.WebApp.expand();
+                // Data to send
+                const dataToSend = {
+                    key: startParam,
+                    telegram_id:  telegramId,
+                    telegram_name: telegramName,
+                    user_name: userName
+                    
+                };
+
+                  //alert("userName:"+userName);
+                // Send AJAX request
+                $.ajax({
+                    url: 'https://kulushey.com/kulushi/telegram_bot/game/response.php', // Replace with your server URL
+                    type: 'POST', // Use 'GET' if you're retrieving data
+                    data: dataToSend,
+                    //dataType: 'json',
+                    success: function(response) {
+                        
+                        //alert(response);
+                        userId = response;
+                        if(parseInt(response) ==0){
+                            showPage(0);
+                       }else{
+                           showPage(30); 
+                       }
+                       if(userId > 5){
+                           
+                       }
+                       
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        showPage(4);
+
+                    }
+                });
+            //});
+            
+            
+            
+            
+
+            
+            
+        $('#login-form').submit(function(event) {
+            event.preventDefault();
+        
+           const phone = $('#phone').val();
+           checkPhone(phone);
+           //alert("phone:"+phone);
+        });
+        
+        
+        function checkPhone(phone){
+            
+                            // Data to send
+                const d = {
+                    key: startParam,
+                    telegram_id:  telegramId,
+                    telegram_name: telegramName,
+                    user_name: userName,
+                    phone_number: phone
+                };
+
+                $.ajax({
+                    url: 'https://kulushey.com/kulushi/telegram_bot/game/checkphone.php', // Replace with your server URL
+                    type: 'POST', // Use 'GET' if you're retrieving data
+                    data: d,
+                    //dataType: 'json',
+                    success: function(response) {
+
+
+                      // alert(response);
+                       userId = response;
+                       if(parseInt(response) ==0){
+                            showPage(0);
+                       }else{
+                           showPage(30); 
+                       }
+                      
+                      //showPage(3);
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        // Handle errors
+                        showPage(4);
+                        $('#response').html('<p>ERRORR: ' + textStatus + ' - ' + errorThrown + '</p>');
+                    }
+                });
+        }
+        
+            
+        
+        $(document).on('click','#story',function(){
+           Telegram.WebApp.shareToStory("https://kulushey.com/kulushi/pro.jpg",{
+               'text':"@merkatoPro_App"
+           });
+       // alert("hello world");
+    });
+
+        function showPage(p){
+                
+                $('.page').hide();
+             switch(p) {
+                case 0:
+                    $('#phone_page').show();
+                    break;
+                case 1:
+                    $('#contact_page').show();
+                    break;
+                case 2:
+                    $('#contact_page').show();
+                    break;
+                case 3:
+                    $('#expire_page').show();
+                    break;
+                case 4:
+                    $('#error_page').show();
+                    break;
+                case 5:
+                    $('#order_page').show();
+                    break;
+                default:
+                    $('#main_page').show();
+                    $('#tt').show();
+                    break;
+            }
+               
+               
+            }
+            
+            // Function to dynamically generate table rows
+function generateTable() {
+    const tableBody = document.querySelector("#dynamic-table tbody");
+
+    products.forEach(product => {
+        // Create a table row element
+        const row = document.createElement("tr");
+
+        // Create and append name cell
+        const nameCell = document.createElement("td");
+        nameCell.textContent = product.name;
+        row.appendChild(nameCell);
+
+        // Create and append price cell
+        const priceCell = document.createElement("td");
+        priceCell.textContent = product.price;
+        row.appendChild(priceCell);
+
+        // Append the row to the table body
+        tableBody.appendChild(row);
+    });
+}
+
+// Call the function to generate the table
+generateTable();
+
+        });
+    </script>
+</body>
+</html>

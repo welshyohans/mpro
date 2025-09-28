@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 class="text-center text-primary">KULUSHEY ACCESSORIES</h2>
+    <br>
+    <h4>Login</h4>
+    <form id="login-form">
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="form-control" id="phone" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        if (localStorage.getItem('user')) {
+            window.location.href = 'index.html';
+        }
+
+        $('#login-form').submit(function(event) {
+            event.preventDefault();
+            sendToServer();
+           // const phone = $('#phone').val();
+            //const password = $('#password').val();
+            //const user = { phone, password };
+            //localStorage.setItem('user', JSON.stringify(user));
+            //window.location.href = 'index.html';
+        });
+    });
+    
+    function sendToServer(){
+        const phone = $('#phone').val();
+        const password = $('#password').val();
+
+             $.post("api/registration/web_checkUser.php",
+                 {
+                    "phone":phone,
+                    "password":password
+                      },
+            function(data, status){
+               const r = JSON.parse(data);
+               if(r.response=="correct"){
+                const name =r.name;
+                const phone = r.phoneNo;
+                const userId = r.userId;
+            const user = { phone, name,userId};
+            localStorage.setItem('user', JSON.stringify(user));
+            window.location.href = 'index.html';
+               }else{
+                alert("Data: " + r.response + "\nStatus: " + status);
+               }
+               
+                   });
+  
+    }
+</script>
+</body>
+</html>

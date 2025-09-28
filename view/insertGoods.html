@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="js/jqeury.js"></script>
+    <script src="js/homescript.js"></script>
+    <link rel="stylesheet" href="w3.css">
+</head>
+<body>
+    
+    <div style="width:60%; margin: auto;">
+    <div class="w3-container w3-blue">
+        <h2>Insert Goods</h2>
+      </div>
+      
+      <form class="w3-container" id="my_form">
+
+        <label class="w3-text-blue"><b>Model</b></label>
+        <input class="w3-input w3-border" type="text" name="model" required>
+
+        <select class="w3-select" id="category" name="category" required>
+            <option value="" disabled selected>Select Category</option>
+          </select>
+
+          <select class="w3-select" id="sub_category" name="sub_category">
+            <option value="" disabled selected>Select Sub Category</option>
+          </select>
+
+          <select class="w3-select" name="brand" required>
+            <option value="" disabled selected>Select Brand</option>
+            <option value="1" class="sss">Option 1</option>
+            <option value="2" class="sss">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+         
+        <label class="w3-text-blue"><b>Pure Price</b></label>
+        <input class="w3-input" type="number" name="pure_price" required>
+
+        <label class="w3-text-blue"><b>MIn Order</b></label>
+        <input class="w3-input w3-border" type="number" name="min_order" required>
+
+        <label class="w3-text-blue"><b>Max Order</b></label>
+        <input class="w3-input w3-border" type="number" name="max_order" required>
+
+        <label class="w3-text-blue"><b>Discount Start</b></label>
+        <input class="w3-input w3-border" type="number" name="discount_start" required>
+
+
+        <label class="w3-text-blue"><b>Description</b></label>
+        <input class="w3-input w3-border" type="text" name="description" required>
+        
+        <br>
+        <input class="w3-check" type="checkbox" checked="checked" name="show_in_home">
+        <label>Show In Home Screen</label>
+
+        <br>
+        <input class='w3-check' type='checkbox' checked='checked' name='is_available'>
+        <label>Is Available</label>
+
+<br>
+        <div class="w3-container w3-blue">
+            <h2>Goods Color</h2>
+        </div>
+        <input class="w3-check" type="checkbox" checked="checked" name="colors" value="">
+        <label>No Color</label>
+        <br>
+        <input class="w3-check" type="checkbox" name="colors" value="">
+        <label>Black</label>
+        <br>
+        <input class="w3-check" type="checkbox" name="colors" value="">
+        <label>White</label>
+
+        <button class="w3-btn w3-blue" onclick="insertGoods();">Insert Goods</button>
+      
+      </form>
+
+      <script>
+
+        let form = document.getElementById("my_form");
+        function handleForm(event){event.preventDefault();}
+        form.addEventListener("submit", handleForm);
+
+        //todo: i will add has color and if it clicks the colors will apear
+
+        let parentCategoryList = [];
+        let subCategoryList = [];
+        let categoryList = [];
+
+  $.get("../api/category/getAllCategory.php", function(data, status){
+      categoryList = JSON.parse(data);
+    let categoryLength = categoryList.length;
+
+    for (let i = 0; i < categoryLength; i++){
+        if(categoryList[i].parentId == 0){
+           // parentCategoryList.push(categoryList[i]);
+            $("#category").append("<option value='"+categoryList[i].categoryId+"' >"+categoryList[i].name+"</option>");
+        }
+    }
+
+    for(let i = 0; i< parentCategoryList.length; i++){
+
+    
+    }
+  });
+
+
+  $(document).on('change',"select[name=category]", function(){
+    let v = $(this).val();
+   
+    let categoryLength = categoryList.length;
+    $("#sub_category").empty();
+
+    for (let i = 0; i < categoryLength; i++){
+      if(categoryList[i].parentId == v){
+        $("#sub_category").append("<option value='"+categoryList[i].categoryId+"' >"+categoryList[i].name+"</option>");
+      }
+    }
+  });
+         
+  
+        function insertGoods() {
+
+           // $selectedProduct = $("select[name=category]").val();
+            //alert("you Select Id: "+$selectedProduct);
+            
+            //todo : latter i will insert value for seo, is available and showinhome
+            // and we will insert category id from subcategory if it is not empty
+
+            $.ajax({
+                url: "../api/temporary_insert/insertGoodsToTemporary.php",
+                type : "POST",
+                data : {
+
+               goodsId : 0,
+               categoryId : $("select[name=category]").val(),
+               brandId : 10,
+               model : $("input[name=model]").val(),
+               description : $("input[name=description]").val(),
+               seo : "seo",
+               minOrder : $("input[name=min_order]").val(),
+               maxOrder : $("input[name=max_order]").val(),
+               discountStarts : $("input[name=discount_start]").val(),
+               showInHome : 1,
+               isAvailable : 1,
+               purePrice : $("input[name=pure_price]").val(),
+               isUpdate : 0
+                },
+                success : function(response){
+                    alert("you inserted it");
+                }
+            }); 
+
+        }
+
+
+
+      </script>
+    </div>
+</body>
+</html>

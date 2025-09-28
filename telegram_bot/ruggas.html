@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Grid</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #009A31; /* Light green */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.menu-icon, .search-icon {
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.search-input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: none;
+    transition: width 0.3s ease;
+}
+
+.search-input:focus {
+    width: 80%;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #e0f7e9; /* Light green */
+    color: #333;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    padding-top: 60px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    text-align: left;
+}
+
+.sidebar ul li a {
+    color: #333;
+    text-decoration: none;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 900;
+}
+
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.content {
+    margin-top: 60px;
+    padding: 20px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+}
+
+.product-info {
+    margin-top: 10px;
+}
+
+.label {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.quick-add {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+    </style>
+</head>
+<body>
+
+<!-- Sidebar Menu -->
+<div class="sidebar" id="sidebar">
+    <div class="close-icon" id="close-icon">&times;</div>
+    <ul>
+        <li><a href="#" data-category="all">All</a></li>
+        <li><a href="#" data-category="charger">Charger</a></li>
+        <li><a href="#" data-category="earphone">Earphone</a></li>
+        <li><a href="#" data-category="cable">Cable</a></li>
+        <li><a href="#" data-category="battery">Battery</a></li>
+        <li><a href="#" data-category="cover">Cover</a></li>
+        <li><a href="#" data-category="others">Others</a></li>
+    </ul>
+</div>
+
+<!-- Overlay for Sidebar -->
+<div class="overlay" id="overlay"></div>
+
+<!-- Header with Fixed Title Bar -->
+<header class="header">
+    <div class="menu-icon" id="menu-icon">&#9776;</div>
+    <div class="title" id="title">Ruggas</div>
+    <input type="text" class="search-input" id="search-input" placeholder="Search..." style="display: none;">
+    <div class="search-icon" id="search-icon">&#128269;</div>
+</header>
+
+<!-- Main Content -->
+<main class="content">
+    <div class="product-grid" id="product-grid">
+        <!-- Product Cards will be generated here -->
+    </div>
+</main>
+
+<script>
+    $(document).ready(function() {
+    // Product array
+    const products = [
+        
+        { id: 1, name: "Ruggas earphone", detail: "RGS-777", category: "earphone", price: 130 ,img:"https://kulushey.com/kulushi/img/rugasear.jpg"},
+        { id: 2, name: "Economy micro charger", detail: "2 usb port   2.4A output", category: "charger", price: 25,img:"https://kulushey.com/kulushi/img/ruggas.jpg" },
+        { 
+        id: 3, name: "Sunday earphone", detail: "some detail about sunday", category: "earphone", price: 100,img:"https://kulushey.com/kulushi/img/sunday.jpg" },
+        { id: 4, name: "Ru-23 typeC charger", detail: "", category: "charger", price: 120,img:"https://kulushey.com/kulushi/img/ruggasru.jpg" },
+        { id: 5, name: "HM-22 earphone", detail: "Noise-canceling", category: "earphone", price: 50,img:"https://kulushey.com/kulushi/img/hm22.jpg" },
+        { id: 6, name: "Ruggas iphone cable", detail: "", category: "cable", price: 10,img:"https://kulushey.com/kulushi/img/ruggasiphone.jpg" },
+        { id: 6, name: "Ru-20", detail: "Type-C to Iphone charger  20W", category: "charger", price: 10,img:"https://kulushey.com/kulushi/img/ru20.jpg" },
+        
+        
+        { id: 7, name: "HM-12 earphone", detail: "noise-canceling", category: "earphone", price: 10,img:"https://kulushey.com/kulushi/img/hm12.jpg" },
+        { id: 8, name: "20JT battery", detail: "also used for F1", category: "battery", price: 10,img:"https://kulushey.com/kulushi/img/ruggasbattrey.jpg" },
+        { id: 9, name: "J2 battery", detail: "j2 ruggas battery", category: "battery", price: 10,img:"https://kulushey.com/kulushi/img/ruggasbattrey.jpg" },
+        
+        
+        { id: 10, name: "Ruggas Car Charger", detail: "modulator", category: "others", price: 10,img:"https://kulushey.com/kulushi/img/mob/1347875.jpg" },
+        { id: 11, name: "Micro OTG", detail: "best quality otg", category: "others", price: 10,img:"https://kulushey.com/kulushi/img/mob/120159.jpg" },
+        { id: 12, name: "128GB flash", detail: "quality ruggas flash", category: "others", price: 10,img:"https://kulushey.com/kulushi/img/mob/110672.jpg" },
+        { id: 13, name: "Power socket", detail: "8 power socket with 3 usb and 1 typeC", category: "others", price: 10,img:"https://kulushey.com/kulushi/img/mob/126937.jpg" },
+        
+        
+        
+        { id: 14, name: "Car Charger", detail: "Type-C car charger", category: "others", price: 10,img:"https://kulushey.com/kulushi/img/mob/1426882.jpg" },
+        { id: 15, name: "3in1 ruggas cable", detail: "multi-functional cable", category: "cable", price: 10,img:"https://kulushey.com/kulushi/img/mob/118623.jpg" },
+        { id: 16, name: "Seko TypeC cable", detail: "seko cable", category: "cable", price: 10,img:"https://kulushey.com/kulushi/img/sekotypec.jpg" },
+        { id: 17, name: "Seko SK66 earphone", detail: "Sk-66", category: "earphone", price: 10,img:"https://kulushey.com/kulushi/img/sk66.jpg" },
+        { id: 18, name: "Bistima micro charger", detail: "4.4A bistima micro charger", category: "charger", price: 10,img:"https://kulushey.com/kulushi/img/mob/127773.jpg" }
+    ];
+
+    // Function to render products
+    function renderProducts(filteredProducts) {
+        $('#product-grid').empty();
+        filteredProducts.forEach(product => {
+            $('#product-grid').append(`
+                <div class="product-card">
+                 <img src="${product.img}" alt="Product Image">
+                    <div class="product-info">
+                        <h2>${product.name}</h2>
+                        <p>${product.detail}</p>
+
+                    </div>
+                </div>
+            `);
+        });
+    }
+
+    // Render all products initially
+    renderProducts(products);
+
+    // Toggle Sidebar Menu
+    $('#menu-icon').click(function() {
+        $('#sidebar').css('transform', 'translateX(0)');
+        $('#overlay').fadeIn();
+    });
+
+    // Close Sidebar
+    $('#close-icon, #overlay').click(function() {
+        $('#sidebar').css('transform', 'translateX(-100%)');
+        $('#overlay').fadeOut();
+    });
+
+    // Filter products by category
+    $('.sidebar ul li a').click(function(event) {
+        event.preventDefault();
+        const category = $(this).data('category');
+
+        const filteredProducts = category === 'all'
+            ? products
+            : products.filter(product => product.category === category);
+
+        renderProducts(filteredProducts);
+        
+        // Close the sidebar after selection
+        $('#sidebar').css('transform', 'translateX(-100%)');
+        $('#overlay').fadeOut();
+    });
+
+    // Toggle search input and title
+    $('#search-icon').click(function() {
+        $('#title').toggle();
+        $('#search-input').toggle().focus();
+        $(this).toggleClass('active');
+
+        // Reset search input when toggling back to title
+        if (!$('#search-input').is(':visible')) {
+            $('#search-input').val('');
+            renderProducts(products);
+        }
+    });
+
+    // Filter products based on search input
+    $('#search-input').on('input', function() {
+        const searchText = $(this).val().toLowerCase();
+        const filteredProducts = products.filter(product =>
+            product.name.toLowerCase().includes(searchText) ||
+            product.detail.toLowerCase().includes(searchText)
+        );
+
+        renderProducts(filteredProducts);
+    });
+});
+
+
+</script>
+</body>
+</html>

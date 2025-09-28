@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* General Styles */
+body {
+      overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  background-color:#E8E4F4;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+.hide{
+   display : none;
+        }
+
+
+
+
+/* Top Bar */
+.top-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #4143ef;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    z-index: 1;
+}
+
+.menu-icon {
+    padding-left:10px;
+    cursor: pointer;
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.search-bar {
+    flex-grow: 1;
+    padding: 5px;
+    font-size: 16px;
+}
+
+
+
+/* Sidebar Navigation */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    background-color: #4143ef;
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    background-color: #575757;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 36px;
+}
+
+
+
+/* Triangle Button */
+.triangle-btn {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #4143ef;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+
+
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #4143ef;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    z-index: 1;
+}
+
+.bottom-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    position: relative;
+         padding: 10px 20px;
+  border-radius: 10px;
+}
+.selected_nav {
+    background-color: green;
+
+}
+
+
+
+/* Badge for Cart */
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 50%;
+    font-size: 12px;
+}
+
+/* Main Content */
+.main-content {
+    padding: 70px 10px 60px; /* Adjust for top and bottom bars */
+    width :100%;
+    
+}
+
+/* Overlay for clicking outside the sidebar */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1;
+}
+
+/*for home screen products */
+#product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 5px;
+}
+
+.product-card {
+    background-color: white;
+    padding :5px;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    flex: 0 1 calc(50% - 40px);
+    max-width: calc(50% - 40px);
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+}
+
+.product-details {
+    padding: 15px;
+}
+
+.product-name {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 10px;
+}
+
+.product-price {
+    padding:4px;
+    font-size: 18px;
+    color: #4143ef;
+    margin: 0 0 5px;
+}
+
+.product-discount {
+    font-size: 14px;
+    color: #e74c3c;
+}
+
+ .product-card button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+ .buy-conatiner{
+            display: flex; 
+            justify-content: center;
+        }
+        .buy-btn {
+            background-color: #4143ef;
+            color: white;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+/*
+        .quantity-btn button {
+            background-color: #007bff;
+            color: white;
+            margin: 0 5px;
+        }*/
+        
+       .plus-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .minus-button{
+            background-color: #ed3a3a;
+            color: white;
+        }
+        .plus-btn{
+            background-color: #28a745;
+            color: white;
+        }
+        
+        
+        
+        /* this is for cart screen */
+        .plus-btn{
+            background-color: #28a745;
+            color: white;
+        }
+        .minus-btn{
+            background-color: #ed3a3a;
+            color: white;
+        }
+        
+        
+
+        .quantity-btn span {
+            margin: 0 10px;
+        }
+        
+        #cart_page{
+            justify-content: center;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            padding-bottom: 60px;
+            
+
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        .cart-image {
+           width: 50px;
+           height: auto;
+       }
+
+        .item-details {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-controls button {
+            margin: 0 5px;
+        }
+
+        .comment-field {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            resize: none; /* Prevent resizing */
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5; /* Adjust line height to match design requirements */
+            height: 3em; /* Adjust height to fit approximately two lines */
+        }
+                hr {
+            border-top: 3px solid blue; /* Adjust thickness, color, and style as needed */
+        }
+        .right-aligned {
+            padding-right:30px;
+      text-align: right;
+    }
+    #no_goods{
+        color:red;
+        font-size:20px;
+    }
+    
+    /* for the phone screen */
+    /* Center the screen */
+#phone_screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+}
+
+/* Style the form */
+#login-form {
+    background-color: #f7f7f7; /* Light gray background */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    max-width: 400px; /* Set a maximum width for the form */
+    width: 100%; /* Ensure the form takes up the full width of its container */
+}
+
+/* Style the input fields */
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+.form-group label{
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    color:green;
+}
+
+/* Style the button */
+.login_btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff; /* Blue background color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Add hover effect to the button */
+.login_btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+
+/* for contact us screen */
+
+/* Center the error screen */
+#contact_screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #f8d7da; /* Light red background color */
+}
+
+/* Style the error message */
+.error-message {
+    text-align: center;
+    background-color: white; /* White background for the message box */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    max-width: 400px; /* Set a maximum width for the message box */
+    width: 100%; /* Ensure the message box takes up the full width of its container */
+}
+
+/* Style the heading */
+.error-message h2 {
+    color: #721c24; /* Dark red color for the heading */
+    margin-bottom: 20px;
+}
+
+/* Style the paragraph */
+.error-message p {
+    color: #333; /* Dark gray color for the text */
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Style the phone link */
+.phone-link {
+    color: #007bff; /* Blue color for the phone link */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Add hover effect to the phone link */
+.phone-link:hover {
+    text-decoration: underline;
+}
+
+
+/*design for loading screen */
+/* Center the loading screen */
+#loading_screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+    background-color: #f0f0f0; /* Light gray background color */
+}
+
+/* Spinner styles */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 8px solid rgba(0, 0, 0, 0.1); /* Light border */
+    border-top-color: #007bff; /* Blue top border */
+    border-radius: 50%; /* Circular shape */
+    animation: spin 1s linear infinite; /* Infinite spinning animation */
+}
+
+/* Loading text style */
+#loading_screen p {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333; /* Dark gray color */
+}
+
+/* Keyframes for the spinner animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* for profile page */
+
+/* Center the profile page */
+#profile_page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #f0f0f0; /* Light gray background */
+}
+
+/* Style the profile initial container */
+.profile-initial {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Circular shape */
+    background-color: #007bff; /* Blue background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+/* Style the initial */
+.profile-initial span {
+    font-size: 72px; /* Large font size for the initial */
+    color: white; /* White color for the initial */
+    font-weight: bold;
+}
+
+/* Style the user name */
+#user-name {
+    font-size: 24px;
+    color: #333; /* Dark gray color */
+    font-weight: bold;
+    text-align: center;
+}
+
+/*** for dialog ***/
+
+/* Style the dialog container (centered and overlay background) */
+.dialog-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Style the dialog box */
+.dialog-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    text-align: center;
+}
+
+/* Loading spinner styles */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1); /* Light border */
+    border-top-color: #007bff; /* Blue top border */
+    border-radius: 50%; /* Circular shape */
+    animation: spin 1s linear infinite; /* Infinite spinning animation */
+    margin: 20px auto;
+}
+
+/* Keyframes for the spinner animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hidden class to hide elements */
+.hidden {
+    display: none;
+}
+
+/* Style the close button */
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+}
+
+/* Add hover effect to the close button */
+.btn:hover {
+    opacity: 0.9;
+}
+
+.order{
+    text-align:right;
+}
+.center-text{
+    margin:0 auto;
+   padding-left:5px;
+}
+.no-image{
+    color:red;
+    padding-top:20px;
+}
+
+
+    </style>
+</head>
+<body>
+
+
+<!--
+ <div id ="another_page" class = "page hide">
+     
+ </div>-->
+ 
+    <div id = "loading_screen" class = "screen screen">
+        <div class="spinner"></div>
+        <p>Loading, please wait...</p>
+    </div>
+    <div id = "phone_screen" class = "screen hide">
+        
+        <form id="login-form">
+           <div class="form-group">
+               <label>ስልክ ቁጥርዎን ያስገቡ!!</label>
+               <input type="text" class="form-control" placeholder="Phone Number" id="phone" required>
+             </div>
+
+            <button type="submit" class="login_btn">Login</button>
+        </form>
+    </div>
+
+    <div id = "contact_screen" class = "screen hide">
+            <div class="error-message">
+        <h2>Phone Number Not Registered</h2>
+        <p>The phone number you entered is not registered in our database.</p>
+        <p>contact us at <a href="#" class="phone-link">0943-090921</a>.</p>
+    </div>
+    </div>
+    <div id = "error_screen" class = "screen">Some Thing Error Happen!</div>
+    
+    
+     <div class = "screen hide" id = "main_screen">
+         <!-- Top Navigation Bar -->
+    <div class="top-bar">
+        <div class="menu-icon" id="openNav">&#9776;</div>
+        <input type="text" id= "search" class="search-bar" placeholder="Search">
+    </div>
+
+    <!-- Fixed Triangle Button -->
+    <div class="triangle-btn" id="openNavTriangle">&#9654;</div>
+
+    <!-- Sidebar Navigation -->
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" id="closeNav">&times;</a>
+        <a href="#" class="category" data-id="8">Chargers & Cables</a>
+        <a href="#" class="category" data-id="9">EarPhones</a>
+        <a href="#" class="category" data-id="7">Glass</a>
+        <a href="#" class="category" data-id="32">Cover</a>
+        <a href="#" class="category" data-id="10">Button Phone</a>
+        <a href="#" class="category" data-id="11">Smart Phone</a>
+        <a href="#" class="category" data-id="12">Battery</a>
+        <a href="#" class="category" data-id="13">Flash & Memory</a>
+        <a href="#" class="category" data-id="241">Ruggas</a>
+        
+        
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Your main content goes here -->
+        <div id = "home_page" class= "sub_page">
+                <div id="product-grid">
+        <!-- Example Product Card -->
+                    <div class="product-card">
+                       <img src="https://kulushey.com/kulushi/img/3g.jpg" alt="Product Image" class="product-image">
+                      <div class="product-details">
+                       <h2 class="product-name">Product Name</h2>
+                       <p class="product-price">$29.99</p>
+                       <p class="product-discount">Buy 2+ & get 10% off</p>
+                     </div>
+                   </div>
+                </div>
+                <div id = "no_goods">No related goods!</div>
+        </div>
+        
+        
+        <div id = "cart_page" class = "sub_page hide">
+              <div id = "cart_list"></div>
+                    <hr>
+                    <div class="right-aligned">
+                          <h3 style="color:blue;" id = "total_price">Total: 345 birr</h3>
+                    </div>
+                  <textarea id="comment" class="comment-field" placeholder="write your comment here..." rows="2"></textarea>
+                  <hr>
+                  <button class = "order btn">Order</button>
+        </div>
+        
+        
+        <div id = "profile_page" class = "sub_page hide">
+            
+               <div class="profile-initial">
+                    <span id="initial"></span>
+                </div>
+
+            <h2 id="user-name"></h2>
+            
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="#" id ="home" class = "navs selected_nav">Home</a>
+        <a href="#" id="cart" class = "navs">
+            Cart
+            <span class="badge" id="orderCount">0</span> <!-- Badge for order count -->
+        </a>
+        <a href="#" id = "profile" class = "navs">Profile</a>
+    </div>
+</div>
+ 
+<div id="dialog" class="dialog-container hidden">
+    <div class="dialog-box">
+        <div id="loading-section">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+        <div id="message-section" class="hidden">
+            <h2 id="message-title"></h2>
+            <button class="btn close-btn">Close</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            
+           // alert("hello world");
+        //variables
+        let startParam = 0;
+        let telegramId = 0;
+        let telegramName = "name";
+        let userName = "user";
+        let userId = 0;
+        let profile_picture = "";
+        
+        
+        
+                //sc means second category
+        let products = [];
+    
+        let filteredProduct = [];
+        let cover = [];
+        let cart = [];
+        let total_price = 0;
+    
+    const mainpage = document.getElementById('product-grid');
+    const cartpage = document.getElementById('cart_list');
+        
+        
+        
+        
+        
+        if (Telegram.WebApp) {
+            // Initialize Telegram WebApp
+            Telegram.WebApp.ready();
+            
+             startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
+              const user = Telegram.WebApp.initDataUnsafe.user;
+        
+
+               telegramId = user.id ;
+               telegramName=user.first_name;
+               userName = user.username;
+               profile_picture = user.photo_url;
+   // alert("satrtParam: "+startParam+" name:"+telegramName+" id:"+telegramId);
+            // Optionally, expand the WebApp to fill the screen
+            //Telegram.WebApp.expand();
+        } else {
+            alert('Telegram WebApp SDK not loaded.'); 
+        }
+        
+        //fill screen width
+         Telegram.WebApp.expand();
+        
+                const dataToSend = {
+                    key: startParam,
+                    telegram_id:  telegramId,
+                    telegram_name: telegramName,
+                    user_name: userName
+                    
+                };
+        
+        
+        
+        
+        
+ 
+                   //alert("userName:"+userName);
+                // Send AJAX request
+                $.ajax({
+                    url: 'https://kulushey.com/kulushi/telegram_bot/category/response.php', // Replace with your server URL
+                    type: 'POST', // Use 'GET' if you're retrieving data
+                    data: dataToSend,
+                    //dataType: 'json',
+                    success: function(response) {
+                        // Handle the response from the server
+                        // Parsing the JSON string into a JavaScript object
+                      const data = JSON.parse(response);
+
+                      // Accessing the userId property
+                       userId = data.userId;
+
+                      // alert("userId:"+userId);
+                       
+                        if(userId <5){
+                         if(userId == 0){
+                           showScreen(1);
+                           }else{
+                            showScreen(2);   
+                           } 
+                       }else{
+                           showScreen(3);
+                        //in this case i will call funtion for manipulation
+                           products = data.products
+                          loadUI();              
+                       }
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        // Handle errors 4 is for error
+    
+                        showPage(4);
+                        /*$('#response').html('<p>Error: ' + textStatus + ' - ' + errorThrown + '</p>');*/
+                    }
+                });
+ 
+ 
+//checking phone number
+     $('#login-form').submit(function(event) {
+            event.preventDefault();
+        
+           const phone = $('#phone').val();
+           checkPhone(phone);
+           //alert("phone:"+phone);
+        });
+        
+        
+
+    
+    
+    
+            
+            
+            loadUI();
+    // Open the sidebar when the menu icon or triangle button is clicked
+    $('#openNav, #openNavTriangle').on('click', function() {
+        $('#mySidenav').css('width', '250px');
+        $('#overlay').fadeIn();  // Show the overlay
+    });
+
+    // Close the sidebar when the close button is clicked
+    $('#closeNav, #overlay').on('click', function() {
+        $('#mySidenav').css('width', '0');
+        $('#overlay').fadeOut(); // Hide the overlay
+    });
+
+    // Close the sidebar when a link is clicked
+    $('#mySidenav a').on('click', function() {
+        $('#mySidenav').css('width', '0');
+        $('#overlay').fadeOut(); // Hide the overlay
+    });
+    
+    
+   //home clicked
+    $('#home').on('click', function() {
+      showPage(0);
+    });
+    
+       //cart clicked
+    $('#cart').on('click', function() {
+      showPage(1);
+      console.log(cart);
+      cartUI();
+       totalPrice();
+    });
+    
+       //profile clicked
+    $('#profile').on('click', function() {
+      showPage(2);
+      
+
+let initial = telegramName.charAt(0).toUpperCase(); // Get the first letter and capitalize it
+
+// Set the initial and username in the HTML
+document.getElementById('initial').textContent = initial;
+document.getElementById('user-name').textContent = telegramName;
+    });
+    
+    
+    
+            function checkPhone(phone){
+            
+                            // Data to send
+                const d = {
+                    key: startParam,
+                    telegram_id:  telegramId,
+                    telegram_name: telegramName,
+                    user_name: userName,
+                    phone_number: phone
+                };
+                //alert("telegram_id:"+telegramId+" key:"+startParam)
+                            // Send AJAX request
+                $.ajax({
+                    url: 'https://kulushey.com/kulushi/telegram_bot/category/checkphone.php', // Replace with your server URL
+                    type: 'POST', // Use 'GET' if you're retrieving data
+                    data: d,
+                    //dataType: 'json',
+                    success: function(response) {
+                        
+                        // Handle the response from the server
+                        // Parsing the JSON string into a JavaScript object
+                      const data = JSON.parse(response);
+
+                      // Accessing the userId property
+                       userId = data.userId;
+
+                      // alert("userId:"+userId);
+                       
+                        if(userId <5){
+                         if(userId == 0){
+                           showScreen(1);
+                           }else{
+                            showScreen(2);   
+                           } 
+                       }else{
+                           showScreen(3);
+                        //in this case i will call funtion for manipulation
+                           products = data.products
+                          loadUI();              
+                       }
+
+                    
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        // Handle errors
+                        showPage(4);
+                        $('#response').html('<p>ERRORR: ' + textStatus + ' - ' + errorThrown + '</p>');
+                    }
+                });
+        }
+        
+        function showPage(p){
+                
+                $('.sub_page').hide();
+                $('.navs').removeClass('selected_nav');
+             switch(p) {
+                case 0:
+                    $('#home_page').show();
+                    $('#home').addClass('selected_nav');
+                    break;
+                case 1:
+                    $('#cart_page').show();
+                     $('#cart').addClass('selected_nav');
+                    break;
+                case 2:
+                    $('#profile_page').show();
+                     $('#profile').addClass('selected_nav');
+                    break;
+                default:
+                    $('#home_page').show();
+                     $('#home').addClass('selected_nav');
+                    break;
+            }
+        }
+        
+        function showScreen(p){
+                
+                $('.screen').hide();
+             switch(p) {
+                case 0:
+                    $('#loading_screen').show();
+                    break;
+                case 1:
+                    $('#phone_screen').show();
+                    break;
+                case 2:
+                    $('#contact_screen').show();
+                    break;
+                case 3:
+                    $('#main_screen').show();
+                    break;
+                case 4:
+                    $('#error_screen').show();
+                    break;                    
+                default:
+                    $('#loading_screen').show();
+                    break;
+            }
+        }
+        
+        
+    function loadUI(){
+             $("#no_goods").hide();
+                mainpage.innerHTML = '';
+                
+                products.forEach(product => {
+                
+                            const itemImage = product.img !== 'no' ? `<img src="https://kulushey.com/kulushi/img/${product.img}" class="product-image" alt="${product.n}">` : '';
+                            
+            const itemNameDisplay = product.img == 'no' ? `<div class="no-image center-text" style="height: 160px; width: 120px;">${product.n}</div>` : itemImage;
+            
+             
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'product-card';
+                    productDiv.innerHTML = `
+                    ${itemNameDisplay}
+                        <div class="product-name center-text">${product.n}</div>
+                        <div class="product-price center-text">${product.p} birr</div>
+                        <div class="buy-conatiner"><button class="buy-btn" id="buy${product.id}" data-id="${product.id}">Buy</button></div>
+                        
+                        <div class="quantity-btn" id="c${product.id}" style="display: none;">
+                            <button class="minus-button" data-id="${product.id}">-</button>
+                            <span id="q${product.id}">1</span>
+                            <button class="plus-button" data-id="${product.id}">+</button>
+                        </div>
+                    `;
+                    mainpage.appendChild(productDiv);
+                });
+               
+            }
+    function  loadFilteredUI(){
+             //alert("hello filtered ui");
+             $("#no_goods").hide();
+             
+                mainpage.innerHTML = '';
+                filteredProduct.forEach(product => {
+                
+                            const itemImage = product.img !== 'no' ? `<img src="https://kulushey.com/kulushi/img/${product.img}" class="product-image" alt="${product.n}">` : '';
+                            
+            const itemNameDisplay = product.img == 'no' ? `<div class="no-image center-text" style="height: 160px; width: 120px;">${product.n}</div>` : itemImage;
+            
+             
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'product-card';
+                    productDiv.innerHTML = `
+                    ${itemNameDisplay}
+                        <div class="product-name center-text">${product.n}</div>
+                        <div class="product-price center-text">${product.p} birr</div>
+                        <div class="buy-conatiner"><button class="buy-btn" id="buy${product.id}" data-id="${product.id}">Buy</button></div>
+                        
+                        <div class="quantity-btn" id="c${product.id}" style="display: none;">
+                            <button class="minus-button" data-id="${product.id}">-</button>
+                            <span id="q${product.id}">1</span>
+                            <button class="plus-button" data-id="${product.id}">+</button>
+                        </div>
+                    `;
+                    mainpage.appendChild(productDiv);
+                });
+               
+               if (filteredProduct.length === 0) {
+                    $("#no_goods").show();
+                    }
+                        
+                    
+               //update from cart
+               updateUIFromCart();
+            
+    }
+            
+    function cartUI(){
+                
+            
+               cartpage.innerHTML = '';
+                cart.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'cart-item';
+                    productDiv.innerHTML = `
+                    
+                    <img src="https://kulushey.com/kulushi/img/${product.img}" alt="${product.name}" class="cart-image">
+                      <div class="item-details">
+                        <div class="product-name">${product.n}</div>
+                        <div class="product-price">${product.p} birr</div>
+                      </div>
+                      <div class="quantity-controls">
+                        <button class="minus-btn btn btn-sm btn-secondary" data-id="${product.id}">-</button>
+                        <span id="oq${product.id}">${product.quantity}</span>
+                        <button class="plus-btn btn btn-sm btn-primary" data-id="${product.id}">+</button>
+                    </div>
+                    <button class="remove-btn" data-id="${product.id}">Remove</button>
+                    `;
+
+                    cartpage.appendChild(productDiv);
+                });
+               
+            
+            }
+            
+    function updateUIFromCart(){
+        console.log(cart);
+        cart.forEach(product => {
+            
+         $("#buy"+product.id).hide();
+         $("#c"+product.id).show();
+         $('#q'+product.id).text(product.quantity);
+        });
+    }
+        
+     
+     //buy clicked
+   $(document).on('click', '.buy-btn', function() {
+         const id = $(this).data('id');
+         const cartItem = cart.find(cartItem => cartItem.id == id);
+         const item = products.find(coverItem =>coverItem.id == id);
+        // alert("it works:"+cartItem);
+         $("#buy"+id).hide();
+         $("#c"+id).show();
+        if (cartItem) {
+            cartItem.quantity += 1;
+            alert("it found name:"+cartItem.n);
+        } else {
+            cart.push({ ...item, quantity: 1 });
+            $('#q'+id).text(1);
+            //alert("id:${id} is not found");
+        }
+      $("#orderCount").text(cart.length);
+    });
+    
+    //minus in home screen
+        $(document).on('click', '.minus-button', function() {
+         //   alert("hello minus");
+        const id = $(this).data('id');
+        const cartItem = cart.find(cartItem => cartItem.id == id);
+       // alert("it found name:"+cartItem.n);
+        if(cartItem.quantity ==1){
+            cart = cart.filter(item=>item.id !=id);
+         $("#buy"+id).show();
+         $("#c"+id).hide();
+        }else{
+            cartItem.quantity = cartItem.quantity -1;
+            $('#q'+id).text(cartItem.quantity);
+        }
+        $("#orderCount").text(cart.length);
+               
+    });
+    
+    //plus in home screen 
+    $(document).on('click', '.plus-button', function() {
+       
+         const id = $(this).data('id');
+        const cartItem = cart.find(cartItem => cartItem.id == id);
+        //alert("it found name:"+cartItem.n);
+        cartItem.quantity = cartItem.quantity +1;
+        $('#q'+id).text(cartItem.quantity);
+               
+    });
+    
+    
+    //for cart screen
+    
+        //for the order page
+        $(document).on('click', '.minus-btn', function() {
+        const id = $(this).data('id');
+        const cartItem = cart.find(cartItem => cartItem.id == id);
+        
+        if(cartItem.quantity ==1){
+            cart = cart.filter(item=>item.id !=id);
+         $("#buy"+id).show();
+         $("#c"+id).hide();
+         cartUI();
+        }else{
+            cartItem.quantity = cartItem.quantity -1;
+            $('#q'+id).text(cartItem.quantity);
+            $('#oq'+id).text(cartItem.quantity);
+        }
+               totalPrice();
+               
+    });
+    
+    $(document).on('click', '.plus-btn', function() {
+         const id = $(this).data('id');
+        const cartItem = cart.find(cartItem => cartItem.id == id);
+        cartItem.quantity = cartItem.quantity +1;
+        $('#q'+id).text(cartItem.quantity);  // this is for the main page
+        $('#oq'+id).text(cartItem.quantity); // this is for the order page
+        totalPrice();
+               
+    });
+    
+    $(document).on('click','.remove-btn',function(){
+        
+        const id = $(this).data('id');
+         cart = cart.filter(item=>item.id !=id);
+         $("#buy"+id).show();
+         $("#c"+id).hide();
+         cartUI();
+         totalPrice();
+    });
+
+   function totalPrice(){
+       total_price = 0;
+       cart.forEach(product =>{
+           total_price += product.p * product.quantity;
+       });
+       $("#total_price").text("Total:"+total_price+" birr");
+       $("#orderCount").text(cart.length);
+       
+   }
+   
+   //side bar
+
+    $(document).on('click', '.category', function() {
+        showPage(0);
+         const id = $(this).data('id');
+          
+                 // Filter based on cid or sc
+         filteredProduct = products.filter(product => product.cid == id || product.sc == id);
+        // alert("hello category:"+filteredProduct[2].n);
+        loadFilteredUI();
+               
+    });
+    
+        document.getElementById('comment').addEventListener('focus', function() {
+        // Adjust scroll position after a delay to account for the keyboard opening
+        setTimeout(() => {
+            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 500);
+    });
+    
+        document.getElementById('search').addEventListener('focus', function() {
+            showPage(0);
+    });
+    
+        document.getElementById('search').addEventListener('input', function() {
+            let searchText = $(this).val().toLowerCase();
+            filteredProduct = products
+            .filter(product => product.n.toLowerCase().includes(searchText))
+            .slice(0, 100); // Limit to first 100 items
+            
+            loadFilteredUI();
+            console.log(searchText);
+    });
+    
+    
+        $(document).on('click', '.order', function() {
+            //alert("you click me");
+            if(cart.length == 0){
+                alert("please select some products!!");
+            }else{
+                ordered();
+            }
+               
+    });
+            $(document).on('click', '#dialog', function() {
+            $(this).addClass('hidden');
+               
+    });
+    
+        function ordered(){
+        
+            // Show the loading section and hide the message section
+             const messageTitle = document.getElementById('message-title');
+         document.getElementById('dialog').classList.remove('hidden');
+    document.getElementById('loading-section').classList.remove('hidden');
+    document.getElementById('message-section').classList.add('hidden');
+          
+        const totalPrice = cart.reduce((sum, item) => sum + (item.p * item.quantity), 0);
+        
+        const orderList = cart.map(item => ({
+            id: item.id,
+            quantity: item.quantity,
+            price: item.p
+        }));
+       const comment = $("#comment").val();
+        const order = {
+            userId,
+            totalPrice,
+            orderList,
+            comment
+        };
+        
+        const jsonData =JSON.stringify(order);
+         //alert(jsonData);
+      
+        
+             $.ajax({
+                    url: 'https://kulushey.com/kulushi/telegram_bot/category/insertOrder.php', // Change this to your server-side script
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: jsonData,
+                    success: function(response) {
+                
+                        // Hide the loading section
+                      document.getElementById('loading-section').classList.add('hidden');
+        
+                         // Show the message section
+                     document.getElementById('message-section').classList.remove('hidden');
+                     messageTitle.textContent = "በትክክል ታዘዋል!!";
+                     messageTitle.style.color = "#28a745"; // Green color for success
+                        //clear cart6
+                        clearCart();
+                        //alert('JSON data uploaded successfully.');
+                    },
+                    error: function(xhr, status, error) {
+                messageTitle.textContent = "Error occurred.";
+                messageTitle.style.color = "#dc3545"; // Red color for error
+                    }
+                });
+    
+    }
+    
+    function clearCart(){
+        //alert("you ordered correctly");
+          cart.forEach(product => {
+
+         $("#buy"+product.id).show();
+         $("#c"+product.id).hide();
+         $('#q'+product.id).text("1");
+        });
+        cartpage.innerHTML = '';
+        cart = [];
+        
+        //bage and price
+               $("#total_price").text("Total:"+0);
+       $("#orderCount").text("0");
+    }
+    
+
+});
+
+
+
+
+
+
+    
+    
+
+
+    </script>
+</body>
+</html>

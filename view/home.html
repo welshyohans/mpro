@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="js/jqeury.js"></script>
+    <script src="js/homescript.js"></script>
+    <link rel="stylesheet" href="w3.css">
+</head>
+<body>
+
+    <h1 class="w3-indigo">Ngus Merkato</h1>
+    <div class="w3-responsive">
+        <table class="w3-table-all">
+        <tr>
+          <th>GoodsId</th>
+          <th>Model</th>
+          <th>Seo</th>
+          <th>Pure Price</th>
+          <th>Min Order</th>
+          <th>Max Order</th>
+          <th>Priority</th>
+          <th>Discount Start</th>
+          <th>Is Available</th>
+        </tr>
+        </table>
+        </div>
+  <!---This modal is for price-->      
+        <div id="id01" class="w3-modal">
+          <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+      
+            <div class="w3-center"><br>
+              <h2>Update Price</h2>
+              <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
+            </div>
+      
+            <form class="w3-container" id="price_form">
+              <div class="w3-section">
+                <input class="w3-input" type="hidden" name="goods_id">
+                <label class="w3-text-blue"><b>Model</b></label>
+                <input class="w3-input w3-border" type="text" name="model_name" readonly>
+
+                <label class="w3-text-blue"><b>Old Price</b></label>
+                <input class="w3-input" type="number" name="old_price" readonly>
+
+                <label class="w3-text-blue"><b>New Price</b></label>
+                <input class="w3-input" type="number" name="pure_price" required>
+                <button class="w3-button w3-block w3-blue w3-section w3-padding" type="submit" onclick="updatePrice();">Update Price</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+<!---This modal is for color updation-->
+
+<div id="id03" class="w3-modal">
+  <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+
+    <div class="w3-center"><br>
+      <h2>Update Color</h2>
+      <span onclick="document.getElementById('id03').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
+    </div>
+
+    <form class="w3-container" id="color_form">
+      <div class="w3-section">
+        <input class="w3-input" type="hidden" name="goods_id">
+        <label class="w3-text-blue"><b>Model</b></label>
+        <input class="w3-input w3-border" type="text" name="model_name" readonly>
+        <div id="color_list"></div>
+      </div>
+        <button class="w3-button w3-block w3-blue w3-section w3-padding" type="submit" onclick="updateColor();">Update Color</button>
+    </form>
+  </div>
+</div>
+
+<!---This modal is usded for goods updation-->
+<div id="id04" class="w3-modal">
+  <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+    
+    <div class="w3-center"><br>
+      <h2>Update Goods</h2>
+      <span onclick="document.getElementById('id04').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
+    </div>
+
+    <form class="w3-container" id="goods_form">
+
+      <input class="w3-input" type="hidden" name="goods_id">
+      <label class="w3-text-blue"><b>Model</b></label>
+      <input class="w3-input w3-border" type="text" name="model_name" required>
+
+      <select class="w3-select" id="category" name="category" required>
+          <option value="" disabled selected>Select Category</option>
+        </select>
+
+        <select class="w3-select" id="sub_category" name="sub_category">
+          <option value="" disabled selected>Select Sub Category</option>
+        </select>
+
+        <select class="w3-select" name="brand" required>
+          <option value="" disabled selected>Select Brand</option>
+          <option value="1" class="sss">Option 1</option>
+          <option value="2" class="sss">Option 2</option>
+          <option value="3">Option 3</option>
+        </select>
+       
+      <label class="w3-text-blue"><b>Pure Price</b></label>
+      <input class="w3-input" type="number" name="pure_price" required>
+      <label class="w3-text-blue"><b>MIn Order</b></label>
+      <input class="w3-input w3-border" type="number" name="min_order" required>
+
+      <label class="w3-text-blue"><b>Max Order</b></label>
+      <input class="w3-input w3-border" type="number" name="max_order" required>
+
+      <label class="w3-text-blue"><b>Discount Start</b></label>
+      <input class="w3-input w3-border" type="number" name="discount_start" required>
+
+
+      <label class="w3-text-blue"><b>Description</b></label>
+      <input class="w3-input w3-border" type="text" name="description" required>
+      
+      <br>
+      <input class="w3-check" type="checkbox" checked="checked" name="show_in_home">
+      <label>Show In Home Screen</label>
+
+      <br>
+      <input class="w3-check" type="checkbox" checked="checked" name="is_available">
+      <label>Is Available</label>
+
+      <button class="w3-button w3-block w3-blue w3-section w3-padding" type="submit" onclick="updateGoods();">Insert Goods</button>
+    
+    </form>
+  </div>
+</div>
+    <script>
+
+//after clicking everything the page must be refreshed
+
+       // prevent form from its default behaviour
+        let form = document.getElementById("goods_form");
+        let price_form = document.getElementById("price_form");
+        let color_form = document.getElementById("color_form");
+
+        function handleForm(event){event.preventDefault();}
+        form.addEventListener("submit", handleForm);
+        price_form.addEventListener("submit", handleForm);
+        color_form.addEventListener("submit", handleForm);
+
+let goodsList = [];
+
+  $.get("../api/goods/getAllgoods.php", function(data, status){
+     goodsList = JSON.parse(data);
+    let goodsLength = goodsList.length;
+    for(let i=0;i<goodsLength;i++){
+      if(goodsList[i].availableInMarket){
+        $("table").append("<tr> <td>"+goodsList[i].goodsId+"</td> <td>"+goodsList[i].model+"</td> <td>"+goodsList[i].seo+"</td> <td>"+goodsList[i].price+"</td> <td>"+goodsList[i].minOrder+"</td> <td>"+goodsList[i].maxOrder+"</td> <td>"+goodsList[i].serverPriority+"</td> <td>"+goodsList[i].discountStart+"</td> <td><input class='w3-check is_available' id= '"+goodsList[i].goodsId+"'  type='checkbox' checked='checked' name='is_available'></td><td>    <div class='w3-dropdown-hover'> <button class='w3-button'>Update</button> <div class='w3-dropdown-content w3-padding-large w3-bar-block w3-card-4'> <button id = '"+goodsList[i].goodsId+"' class ='update_price'>Price</button><br> <button id = '"+goodsList[i].goodsId+"' class ='update_color'>Color</button><br> <button id = '"+goodsList[i].goodsId+"' class ='update_goods'>Goods </button> </div> </div></td> </tr>")   
+      }else{
+    $("table").append("<tr> <td>"+goodsList[i].goodsId+"</td> <td>"+goodsList[i].model+"</td> <td>"+goodsList[i].seo+"</td> <td>"+goodsList[i].price+"</td> <td>"+goodsList[i].minOrder+"</td> <td>"+goodsList[i].maxOrder+"</td> <td>"+goodsList[i].serverPriority+"</td> <td>"+goodsList[i].discountStart+"</td> <td> <input class='w3-check is_available' id = '"+goodsList[i].goodsId+"' type='checkbox' name='is_available'></td><td>  <div class='w3-dropdown-hover'> <button class='w3-button'>Update</button> <div class='w3-dropdown-content w3-padding-large w3-bar-block w3-card-4'> <button id = '"+goodsList[i].goodsId+"' class ='update_price'>Price</button><br> <button id = '"+goodsList[i].goodsId+"' class ='update_color'>Color</button><br> <button id = '"+goodsList[i].goodsId+"' class ='update_goods'>Goods </button> </div> </div></td> </tr>")   
+      }
+    }
+  });
+
+  let colors = [];
+
+  //TODO: i will change this also to 
+  $("input[name=colors]").each(function(){
+    if($(this).is(":checked")){
+      console.log("color selected");
+    }
+  
+  });
+
+
+  $(document).on('click',".is_available", function(){
+    let id = $(this).attr("id");
+    //TODO: latter i will send to server selected goods
+  alert("available selected:"+ id);
+
+  });
+
+ 
+
+
+$(document).on('click',".update_price", function(){
+
+    //get goods based on the id of the clicked goods
+    let id = $(this).attr("id");
+ let goodsLength = goodsList.length;
+
+ let goods;
+ for(let i = 0; i< goodsLength;i++){
+  if(goodsList[i].goodsId === parseInt(id)){
+    goods = goodsList[i];
+    break;
+  }
+ }
+
+  //insert default values for each of them
+              $("input[name=goods_id]").val(goods.goodsId);
+              //$("select[name=category]").val(goods.categoryId);
+              $("input[name=model_name]").val(goods.model);
+              $("input[name=old_price]").val(goods.price);
+              $("input[name=pure_price]").val(goods.price);
+
+
+  document.getElementById('id01').style.display='block';
+});
+
+
+
+$(document).on('click',".update_color", function(){
+  document.getElementById('id03').style.display='block';
+  $("#color_list").empty(); // before add any colorlist we must delete the list
+    //get goods based on the id of the clicked goods
+    let id = $(this).attr("id");
+ let goodsLength = goodsList.length;
+
+ let goods;
+ for(let i = 0; i< goodsLength;i++){
+  if(goodsList[i].goodsId === parseInt(id)){
+    goods = goodsList[i];
+    break;
+  }
+ }
+
+  //insert default values for each of them
+              $("input[name=goods_id]").val(goods.goodsId);
+              //$("select[name=category]").val(goods.categoryId);
+              $("input[name=model_name]").val(goods.model);
+
+  let colorsList = [];
+$.get("../api/color/getAllColor.php", function(data, status){
+    colorsList = JSON.parse(data);
+  let colorLength = colorsList.length;
+
+  for (let i = 0; i < colorLength; i++){
+
+    $("#color_list").append("<input class='w3-check' type='checkbox' name='colors' value='"+colorsList[i].colorId+"'> "+colorsList[i].name+" <br>");
+  }
+
+});
+});
+
+
+let categoryList = [];
+$(document).on('click',".update_goods", function(){
+  document.getElementById('id04').style.display='block';
+
+  let parentCategoryList = [];
+        let subCategoryList = [];
+
+  $.get("../api/category/getAllCategory.php", function(data, status){
+      categoryList = JSON.parse(data);
+    let categoryLength = categoryList.length;
+
+    for (let i = 0; i < categoryLength; i++){
+        if(categoryList[i].parentId == 0){
+           // parentCategoryList.push(categoryList[i]);
+            $("#category").append("<option value='"+categoryList[i].categoryId+"' >"+categoryList[i].name+"</option>");
+        }
+    }
+
+  });
+
+  //get goods based on the id of the clicked goods
+  let id = $(this).attr("id");
+ let goodsLength = goodsList.length;
+
+ let goods;
+ for(let i = 0; i< goodsLength;i++){
+  if(goodsList[i].goodsId === parseInt(id)){
+    goods = goodsList[i];
+    break;
+  }
+ }
+
+  //insert default values for each of them
+              $("input[name=goods_id]").val(goods.goodsId);
+              $("select[name=category]").val(goods.categoryId);
+              $("input[name=model_name]").val(goods.model);
+                $("input[name=description]").val(goods.description);
+               $("input[name=min_order]").val(goods.minOrder);
+               $("input[name=max_order]").val(goods.maxOrder);
+                $("input[name=discount_start]").val(goods.discountStart);
+              $("input[name=pure_price]").val(goods.price);
+});
+
+$(document).on('change',"select[name=category]", function(){
+    let v = $(this).val();
+   
+    let categoryLength = categoryList.length;
+    $("#sub_category").empty();
+
+    for (let i = 0; i < categoryLength; i++){
+      if(categoryList[i].parentId == v){
+        $("#sub_category").append("<option value='"+categoryList[i].categoryId+"' >"+categoryList[i].name+"</option>");
+      }
+    }
+  });
+function updatePrice(){
+
+  $.ajax({
+       url: "../api/temporary_insert/insertPriceToTemporary.php",
+       type: "POST",
+       data: {
+        goodsId : $("input[name=goods_id]").val(),
+        purePrice : $("input[name=pure_price]").val()
+       },
+       success: function(response){
+                    alert("you inserted it");
+                    document.getElementById('id01').style.display='none';
+                    location.reload(true);
+                }
+
+  });
+}
+function updateAvailability(){
+
+}
+
+function updateColor(){
+
+}
+function updateGoods(){
+  
+  $.ajax({
+                url: "../api/temporary_insert/insertGoodsToTemporary.php",
+                type : "POST",
+                data : {
+
+               goodsId : $("input[name=goods_id]").val(),
+               //goodsId : 4,
+               categoryId : $("select[name=category]").val(),
+               brandId : 10,
+              model : $("input[name=model_name]").val(),
+               //model : "i dont know what is happenning right now",
+               description : $("input[name=description]").val(),
+               seo : "seo",
+               minOrder : $("input[name=min_order]").val(),
+               maxOrder : $("input[name=max_order]").val(),
+               discountStarts : $("input[name=discount_start]").val(),
+               showInHome : 1,
+               isAvailable : 1,
+               purePrice : $("input[name=pure_price]").val(),
+               isUpdate : 1
+                },
+                success : function(response){
+                    alert("you inserted it");
+                    document.getElementById('id04').style.display='none';
+                    location.reload(true);
+                }
+            }); 
+}
+
+    </script>
+</body>
+</html>

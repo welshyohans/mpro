@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dictionary App</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  .search-container {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+  }
+  .search-result-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+  }
+  .search-result-item:last-child {
+    border-bottom: none;
+  }
+  .search-result-item:hover {
+    background-color: #f0f0f0;
+  }
+  .result-card {
+    display: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Glass</h1>
+	<a href="https://kulushi.com.et">open my app!</a>
+  <div class="search-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+    <div id="searchResults" class="search-results"></div>
+  </div>
+  <div id="detailCard" class="result-card"></div>
+</div>
+
+<script>
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  const detailCard = document.getElementById('detailCard');
+
+  searchInput.addEventListener('input', function() {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    searchResults.innerHTML = '';
+    detailCard.style.display = 'none';
+
+    if (searchTerm.length === 0) {
+      return;
+    }
+
+    // Simulated search results, replace this with your actual search logic
+    const mockSearchResults = [
+      { title: 'Result 1', description: 'Description of Result 1' },
+      { title: 'Result 2', description: 'Description of Result 2' },
+      { title: 'Result 3', description: 'Description of Result 3' }
+    ];
+
+    mockSearchResults.forEach(result => {
+      if (result.title.toLowerCase().includes(searchTerm) || result.description.toLowerCase().includes(searchTerm)) {
+        const resultItem = document.createElement('div');
+        resultItem.classList.add('search-result-item');
+        resultItem.textContent = result.title;
+        resultItem.addEventListener('click', function() {
+          displayResultDetail(result);
+        });
+        searchResults.appendChild(resultItem);
+      }
+    });
+
+    if (searchResults.children.length === 0) {
+      const noResultsMessage = document.createElement('div');
+      noResultsMessage.classList.add('search-result-item');
+      noResultsMessage.textContent = 'No results found.';
+      searchResults.appendChild(noResultsMessage);
+    }
+
+    searchResults.style.display = 'block';
+  });
+
+  function displayResultDetail(result) {
+    detailCard.innerHTML = `
+      <h2>${result.title}</h2>
+      <p>${result.description}</p>
+    `;
+    detailCard.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Density Test</title>
+    <style>
+        canvas {
+    width: 100%; /* Make it scale to the container width */
+    height: auto; /* Maintain the aspect ratio */
+}
+    </style>
+</head>
+<body>
+    <canvas id="myCanvas" style="border:1px solid #000;"></canvas>
+    <script>
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+
+// Adjust for device pixel ratio
+const dpr = window.devicePixelRatio || 1;
+const logicalWidth = 1100;
+const logicalHeight = 1000;
+
+canvas.width = logicalWidth * dpr;
+canvas.height = logicalHeight * dpr;
+
+// Scale context to match DPR
+ctx.scale(dpr, dpr);
+
+// Set logical size
+canvas.style.width = `${logicalWidth}px`;
+canvas.style.height = `${logicalHeight}px`;
+
+// Draw a grid of colorful circles
+const rows = 10;
+const cols = 10;
+const radius = 50;
+
+for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+        const x = col * 100 + 100;
+        const y = row * 100 + 100;
+
+        // Random color
+        ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+}
+
+
+    </script>
+</body>
+</html>

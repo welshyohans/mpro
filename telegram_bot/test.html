@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.product-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    flex: 0 1 calc(50% - 40px);
+    max-width: calc(50% - 40px);
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+}
+
+.product-details {
+    padding: 15px;
+}
+
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 10px;
+}
+
+.product-price {
+    font-size: 16px;
+    color: #333;
+    margin: 0 0 5px;
+}
+
+.product-discount {
+    font-size: 14px;
+    color: #e74c3c;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="product-grid">
+        <!-- Example Product Card -->
+        <div class="product-card">
+            <img src="https://kulushey.com/kulushi/img/3g.jpg" alt="Product Image" class="product-image">
+            <div class="product-details">
+                <h2 class="product-name">Product Name</h2>
+                <p class="product-price">$29.99</p>
+                <p class="product-discount">Buy 2+ & get 10% off</p>
+            </div>
+        </div>
+
+        <!-- Repeat similar structure for more products -->
+        <!-- Sample products will be dynamically generated below -->
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    const productGrid = document.querySelector('.product-grid');
+    const products = [
+        { id: 1, categoryId: 101, name: 'Product 1', price: 29.99, image: '3g.jpg', discount_start: 2, discount_amount: 10 },
+        { id: 2, categoryId: 102, name: 'Product 2', price: 39.99, image: '2160.jpg', discount_start: 3, discount_amount: 15 },
+        { id: 3, categoryId: 103, name: 'Product 3', price: 19.99, image: '1290.jpg', discount_start: 5, discount_amount: 20 },
+        // Add more sample products...
+    ];
+
+    for (let i = 0; i < 20; i++) {
+        const product = products[i % products.length]; // Cycle through sample products
+        const productCard = `
+            <div class="product-card">
+                <img src="https://kulushey.com/kulushi/img/${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-details">
+                    <h2 class="product-name">${product.name}</h2>
+                    <p class="product-price">$${product.price.toFixed(2)}</p>
+                    <p class="product-discount">Buy ${product.discount_start}+ & get ${product.discount_amount}% off</p>
+                </div>
+            </div>
+        `;
+        productGrid.insertAdjacentHTML('beforeend', productCard);
+    }
+});
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram WebApp Parameter Extraction</title>
+    <style>
+        .hide{
+            display : none;
+        }
+        #phone_page{
+            
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #main_page{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        
+                .order_button {
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    padding: 15px;
+    background-color: #007bff; 
+    color: white; 
+    border: none;
+    border-radius: 0; 
+    text-align: center;
+    cursor: pointer;
+    z-index: 1000;
+       font-size: 18px;
+    font-weight: bold;
+  
+}
+
+.order_button:hover {
+    background-color: #0056b3; /* Darken on hover */
+}
+         .product {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            background-color: #fff;
+            width: calc(33.33% - 10px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-name {
+            font-size: 20px;
+            color: #0655d2;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .product-category {
+            font-size: 16px;
+            color: #007bff;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .buy-conatiner{
+            display: flex; 
+            justify-content: center;
+        }
+        .buy-btn {
+            background-color: #28a745;
+            color: white;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+/*
+        .quantity-btn button {
+            background-color: #007bff;
+            color: white;
+            margin: 0 5px;
+        }*/
+        
+       .plus-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .minus-button{
+            background-color: #ed3a3a;
+            color: white;
+        }
+        .plus-btn{
+            background-color: #28a745;
+            color: white;
+        }
+        .minus-btn{
+            background-color: #ed3a3a;
+            color: white;
+        }
+        
+        
+
+        .quantity-btn span {
+            margin: 0 10px;
+        }
+        .login-form, .contact-us {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-form input {
+            margin-bottom: 15px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .login-form button {
+            padding: 10px;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .login-form button:hover {
+            background-color: #218838;
+        }
+        #order_page{
+            justify-content: center;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            padding-bottom: 60px;
+
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .item-details {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-controls button {
+            margin: 0 5px;
+        }
+        .cart-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            
+     position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    padding: 15px;
+    background-color: #007bff; 
+    color: white; 
+    border: none;
+    border-radius: 0; 
+    text-align: center;
+    cursor: pointer;
+    z-index: 1000;
+        }
+
+        .cart-actions button {
+            width: 48%;
+     background-color: #007bff; 
+    color: white; 
+    font-size: 18px;
+    font-weight: bold;
+    padding :3px;
+        }
+        .comment-field {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            resize: none; /* Prevent resizing */
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5; /* Adjust line height to match design requirements */
+            height: 3em; /* Adjust height to fit approximately two lines */
+        }
+                hr {
+            border-top: 3px solid blue; /* Adjust thickness, color, and style as needed */
+        }
+        .right-aligned {
+      text-align: right;
+    }
+    </style>
+</head>
+<body>
+    
+    
+    <div id = "loading_page" class = "page">Loading</div>
+    <div id = "phone_page" class = "page hide">
+        <form id="login-form">
+           <div class="form-group">
+               <input type="text" class="form-control" placeholder="Phone Number" id="phone" required>
+             </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+    
+    <div id = "expire_page" class = "page hide">This link is Expired</div>
+    <div id = "contact_page" class = "page hide">This phone number is not in our database please contact us in </div>
+    <div id = "error_page" class = "page hide">Some Thing Error Happen!</div>
+    
+    <div id = "main_page" class = "page hide">Main app</div>
+    <div id = "order_page" class = "page hide">
+        
+        <div id = "cart_list">
+
+            </div>
+                <hr>
+                                    <div class="right-aligned">
+                          <h3 style="color:blue;" id = "total_price">Total: 345 birr</h3>
+                    </div>
+                  <textarea id="comment" class="comment-field" placeholder="write your comment here..." rows="2"></textarea>
+
+            <div class="cart-actions">
+                <button class="btn back">&lt;&lt;Back</button>
+                <button class="btn btn-danger">Order</button>
+            </div>
+                
+    </div>
+
+    
+    <div id="response"></div>
+    <!-- Include the Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    
+    
+    <script>
+        $(document).ready(function() {
+                    // Check if the Telegram WebApp SDK is loaded
+                
+        
+        let startParam = 0;
+        let telegramId = 0;
+        let telegramName = "name";
+        let userName = "user";
+        let cover = [];
+        let cart = [];
+        let total_price = 0; // this is for variable
+        
+            
+            const mainpage = document.getElementById('main_page');
+            const orderpage = document.getElementById('cart_list');
+            
+        
+        if (Telegram.WebApp) {
+            // Initialize Telegram WebApp
+            Telegram.WebApp.ready();
+            
+             startParam = window.Telegram.WebApp.initDataUnsafe.start_param;
+              const user = Telegram.WebApp.initDataUnsafe.user;
+            //alert("hello "+startParam);
+
+               telegramId = user.id ;
+               telegramName=user.first_name;
+               userName = user.username;
+
+
+            // Optionally, expand the WebApp to fill the screen
+            //Telegram.WebApp.expand();
+        } else {
+            alert('Telegram WebApp SDK not loaded.'); 
+        }
+           // $('#sendData').on('click', function() {
+                Telegram.WebApp.expand();
+                // Data to send
+                const dataToSend = {
+                    key: startParam,
+                    telegram_id:  telegramId,
+                    telegram_name: telegramName,
+                    user_name: userName
+                    
+                };
+
+                  //alert("userName:"+userName);
+                // Send AJAX request
+                $.ajax({
+                    url: 'https://kulushey.com/kulushi/telegram_bot/cover/response.php', // Replace with your server URL
+                    type: 'POST', // Use 'GET' if you're retrieving data
+                    data: dataToSend,
+                    //dataType: 'json',
+                    success: function(response) {
+                        // Handle the response from the server
+                        // Parsing the JSON string into a JavaScript object
+                      const data = JSON.parse(response);
+
+                      // Accessing the userId property
+                      const userId = data.userId;
+                       //console.log('User ID:', userId);
+                       //data.cover
+                       showPage(userId);
+                       if(userId > 5){
+                           //in this case i will call funtion for manipulation
+                           cover = data.cover
+                          loadUI();
+                       }
+                        //$('#response').html('<p>UserId: ' + userId + '</p>');
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        // Handle errors 4 is for error
+                        showPage(4);
+                        /*$('#response').html('<p>Error: ' + textStatus + ' - ' + errorThrown + '</p>');*/
+                    }
+                });
+            //});
+            
+        $('#login-form').submit(function(event) {
+            event.preventDefault();
+        
+           const phone = $('#phone').val();
+           checkPhone(phone);
+           //alert("phone:"+phone);
+        });
+        
+/*            document.getElementById('comment').addEventListener('focus', function() {
+                alert("hello world");
+        this.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    });*/
+    document.getElementById('comment').addEventListener('focus', function() {
+        // Adjust scroll position after a delay to account for the keyboard opening
+        setTimeout(() => {
+            this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 500);
+    });
+        
+        function checkPhone(phone){
+            
+                            // Data to send
+                const d = {
+                    key: startParam,
+                    telegram_id:  telegramId,
+                    telegram_name: telegramName,
+                    user_name: userName,
+                    phone_number: phone
+                };
+                //alert("telegram_id:"+telegramId+" key:"+startParam)
+                            // Send AJAX request
+                $.ajax({
+                    url: 'https://kulushey.com/kulushi/telegram_bot/cover/checkphone.php', // Replace with your server URL
+                    type: 'POST', // Use 'GET' if you're retrieving data
+                    data: d,
+                    //dataType: 'json',
+                    success: function(response) {
+                        // Handle the response from the server
+                        // Parsing the JSON string into a JavaScript object
+                      const data = JSON.parse(response);
+
+                      // Accessing the userId property
+                      const userId = data.userId;
+                       //console.log('User ID:', userId);
+                       data.cover
+                       showPage(userId);
+                       if(userId > 5){
+                           //in this case i will call funtion for manipulation
+                          // cover = data.cover
+                          loadUI();
+                       }
+                        $('#response').html('<p>UserId: ' + userId + '</p>');
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        // Handle errors
+                        showPage(4);
+                        $('#response').html('<p>ERRORR: ' + textStatus + ' - ' + errorThrown + '</p>');
+                    }
+                });
+        }
+        
+        
+            function loadUI(){
+                
+                mainpage.innerHTML = '';
+                const orderButton = document.createElement('button');
+                 orderButton.className = 'order_button';
+                 orderButton.innerHTML = "View Order";
+                cover.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'product';
+                    productDiv.innerHTML = `
+                        <div class="product-name">${product.n}</div>
+                        <div class="product-category">${product.c}</div>
+                        <div class="product-price">${product.p} birr</div>
+                        <div class="buy-conatiner"><button class="buy-btn" id="buy${product.id}" data-id="${product.id}">Buy</button></div>
+                        
+                        <div class="quantity-btn" id="c${product.id}" style="display: none;">
+                            <button class="minus-button" data-id="${product.id}">-</button>
+                            <span id="q${product.id}">1</span>
+                            <button class="plus-button" data-id="${product.id}">+</button>
+                        </div>
+                    `;
+                    mainpage.appendChild(productDiv);
+                });
+                mainpage.appendChild(orderButton);
+
+            }
+            function cartUI(){
+                
+                
+               orderpage.innerHTML = '';
+                cart.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'cart-item';
+                    productDiv.innerHTML = `
+                    
+                      <div class="item-details">
+                        <div class="product-name">${product.n}</div>
+                        <div class="product-category">${product.c}</div>
+                        <div class="product-price">${product.p} birr</div>
+                      </div>
+                      <div class="quantity-controls">
+                        <button class="minus-btn btn btn-sm btn-secondary" data-id="${product.id}">-</button>
+                        <span id="oq${product.id}">${product.quantity}</span>
+                        <button class="plus-btn btn btn-sm btn-primary" data-id="${product.id}">+</button>
+                    </div>
+                    <button class="remove-btn" data-id="${product.id}">Remove</button>
+                    `;
+
+                    orderpage.appendChild(productDiv);
+                });
+               
+
+            
+            }
+            
+     $(document).on('click', '.buy-btn', function() {
+         const id = $(this).data('id');
+         const cartItem = cart.find(cartItem => cartItem.id == id);
+         const item = cover.find(coverItem =>coverItem.id == id);
+        // alert("it works:"+cartItem);
+         $("#buy"+id).hide();
+         $("#c"+id).show();
+        if (cartItem) {
+            cartItem.quantity += 1;
+            //alert("it found name:"+cartItem.n);
+        } else {
+            cart.push({ ...item, quantity: 1 });
+            $('#q'+id).text(1);
+            //alert("id:${id} is not found");
+        }
+      
+    });
+    $(document).on('click', '.minus-button', function() {
+        const id = $(this).data('id');
+        const cartItem = cart.find(cartItem => cartItem.id == id);
+        
+        if(cartItem.quantity ==1){
+            cart = cart.filter(item=>item.id !=id);
+         $("#buy"+id).show();
+         $("#c"+id).hide();
+        }else{
+            cartItem.quantity = cartItem.quantity -1;
+            $('#q'+id).text(cartItem.quantity);
+        }
+               
+    });
+    
+    $(document).on('click', '.plus-button', function() {
+         const id = $(this).data('id');
+        const cartItem = cart.find(cartItem => cartItem.id == id);
+        cartItem.quantity = cartItem.quantity +1;
+        $('#q'+id).text(cartItem.quantity);
+               
+    });
+    
+    
+    //for the order page
+        $(document).on('click', '.minus-btn', function() {
+        const id = $(this).data('id');
+        const cartItem = cart.find(cartItem => cartItem.id == id);
+        
+        if(cartItem.quantity ==1){
+            cart = cart.filter(item=>item.id !=id);
+         $("#buy"+id).show();
+         $("#c"+id).hide();
+         cartUI();
+        }else{
+            cartItem.quantity = cartItem.quantity -1;
+            $('#q'+id).text(cartItem.quantity);
+            $('#oq'+id).text(cartItem.quantity);
+        }
+               totalPrice();
+    });
+    
+    $(document).on('click', '.plus-btn', function() {
+         const id = $(this).data('id');
+        const cartItem = cart.find(cartItem => cartItem.id == id);
+        cartItem.quantity = cartItem.quantity +1;
+        $('#q'+id).text(cartItem.quantity);  // this is for the main page
+        $('#oq'+id).text(cartItem.quantity); // this is for the order page
+        totalPrice();
+               
+    });
+    
+    $(document).on('click','.remove-btn',function(){
+        
+        const id = $(this).data('id');
+         cart = cart.filter(item=>item.id !=id);
+         $("#buy"+id).show();
+         $("#c"+id).hide();
+         cartUI();
+         totalPrice();
+    });
+
+   function totalPrice(){
+       total_price = 0;
+       cart.forEach(product =>{
+           total_price += product.p * product.quantity;
+       });
+       $("#total_price").text("Total:"+total_price);
+       
+   }
+
+
+    $(document).on('click','.order_button',function(){
+       showPage(5); 
+       cartUI();
+       totalPrice();
+    });
+    $(document).on('click','.back',function(){
+       showPage(20); 
+    });
+            function addToCart(id) {
+                alert("you click id:"+id);
+/*                if (!cart[index]) {
+                    cart[index] = { ...products[index], quantity: 1 };
+                }
+                updateProductUI(index);
+                toggleViewOrderButton();*/
+            }
+
+            function updateQuantity(id, change) {
+                if (cart[index]) {
+                    cart[index].quantity += change;
+                    if (cart[index].quantity <= 0) {
+                        delete cart[index];
+                    }
+                    updateProductUI(index);
+                    toggleViewOrderButton();
+                }
+            }
+
+        function showPage(p){
+                
+                $('.page').hide();
+             switch(p) {
+                case 0:
+                    $('#phone_page').show();
+                    break;
+                case 1:
+                    $('#contact_page').show();
+                    break;
+                case 2:
+                    $('#contact_page').show();
+                    break;
+                case 3:
+                    $('#expire_page').show();
+                    break;
+                case 4:
+                    $('#error_page').show();
+                    break;
+                case 5:
+                    $('#order_page').show();
+                    break;
+                default:
+                    $('#main_page').show();
+                    break;
+            }
+               
+               
+            }
+
+        });
+    </script>
+</body>
+</html>

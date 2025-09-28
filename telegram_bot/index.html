@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Durger King</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f9fa;
+        }
+
+        #product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            background-color: #fff;
+            width: calc(33.33% - 20px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-name {
+            font-size: 20px;
+            color: #0655d2;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .product-category {
+            font-size: 16px;
+            color: #007bff;
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .buy-conatiner{
+            display: flex; 
+            justify-content: center;
+        }
+        .buy-btn {
+            background-color: #28a745;
+            color: white;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+/*
+        .quantity-btn button {
+            background-color: #007bff;
+            color: white;
+            margin: 0 5px;
+        }*/
+        
+       #plus-button {
+            background-color: #28a745;
+            color: white;
+        }
+        #minus-button{
+            background-color: #ed3a3a;
+            color: white;
+        }
+        
+        
+
+        .quantity-btn span {
+            margin: 0 10px;
+        }
+
+        .view-order-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        #order-list {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .order-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            background-color: #fff;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">Loading...</div>
+    <div id="app" style="display: none;">
+        <div id="product-list"></div>
+        <button id="view-order-btn" class="view-order-btn" style="display: none;" onclick="viewOrder()">View Order</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const products = [
+                { id:1,name: 'A05', price: 125,category:'samsung' },
+                { id:2,name: 'A15', price: 130,category:'samsung'  },
+                { id:3,name: 'Pop 7', price: 75,category:'tecno'  },
+                { id:4,name: 'Spark 20', price: 75,category:'tecno'  },
+                { id:5,name: 'A34', price: 75,category:'samsung'  },
+                { id:6,name: 'A23', price: 75,category:'samsung'  },
+                { id:7,name: 'M13', price: 70,category:'samsung'  },
+                { id:8,name: 'M14', price: 70,category:'samsung'  },
+                { id:9,name: 'Pop 8', price: 70,category:'tecno'  },
+                { id:10,name: '12 Pro', price: 70,category:'iphone'  },
+                { id:11,name: '13 Pro', price: 70,category:'iphone'  },
+                { id:12,name: '14 pro max', price: 70,category:'iphone'  },
+                { id:13,name: 'S22 ultra', price: 70,category:'samsung'  },
+                { id:14,name: 'S21', price: 115,category:'samsung'  },
+                { id:15,name: 'S23', price: 115,category:'samsung'  },
+                { id:16,name: 'Smart HD', price: 75,category:'infinex'  },
+                { id:17,name: 'C1', price: 75,category:'nokia'  },
+                { id:18,name: 'G530', price: 75,category:'samsung'  },
+                { id:19,name: 'Hot 10i', price: 75,category:'tecno'  },
+                { id:20,name: 'Hot 30i', price: 75,category:'tecno'  },
+                { id:21,name: 'Hot 9', price: 65,category:'tecno'  },
+                { id:22,name: 'Note 2', price: 65,category:'samsung'  }
+            ];
+
+            const productList = document.getElementById('product-list');
+            const loading = document.getElementById('loading');
+            const app = document.getElementById('app');
+            const viewOrderBtn = document.getElementById('view-order-btn');
+
+            let cart = {};
+            let c = [];
+
+            function loadProducts() {
+                productList.innerHTML = '';
+                products.forEach((product, index) => {
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'product';
+                    productDiv.innerHTML = `
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-category">${product.category}</div>
+                        <div class="product-price">${product.price} birr</div>
+                        <div class="buy-conatiner"><button class="buy-btn" onclick="addToCart(${index})">Buy</button></div>
+                        
+                        <div class="quantity-btn" style="display: none;">
+                            <button id="minus-button" onclick="updateQuantity(${index}, -1)">-</button>
+                            <span>1</span>
+                            <button id="plus-button" onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                    `;
+                    productList.appendChild(productDiv);
+                });
+                loading.style.display = 'none';
+                app.style.display = 'block';
+            }
+
+            function addToCart(index) {
+                if (!cart[index]) {
+                    cart[index] = { ...products[index], quantity: 1 };
+                }
+                updateProductUI(index);
+                toggleViewOrderButton();
+            }
+
+            function updateQuantity(index, change) {
+                if (cart[index]) {
+                    cart[index].quantity += change;
+                    if (cart[index].quantity <= 0) {
+                        delete cart[index];
+                    }
+                    updateProductUI(index);
+                    toggleViewOrderButton();
+                }
+            }
+
+            function updateProductUI(index) {
+                const productDiv = productList.children[index];
+                const buyBtn = productDiv.querySelector('.buy-btn');
+                const quantityBtn = productDiv.querySelector('.quantity-btn');
+                if (cart[index]) {
+                    buyBtn.style.display = 'none';
+                    quantityBtn.style.display = 'flex';
+                    quantityBtn.querySelector('span').innerText = cart[index].quantity;
+                } else {
+                    buyBtn.style.display = 'block';
+                    quantityBtn.style.display = 'none';
+                }
+            }
+
+            function toggleViewOrderButton() {
+                if (Object.keys(cart).length > 0) {
+                    viewOrderBtn.style.display = 'block';
+                } else {
+                    viewOrderBtn.style.display = 'none';
+                }
+            }
+
+            window.addToCart = addToCart;
+            window.updateQuantity = updateQuantity;
+            window.viewOrder = function() {
+                 const jsonString = JSON.stringify(cart);
+
+                 alert(jsonString);
+ 
+                 
+                const orderList = document.createElement('div');
+                orderList.id = 'order-list';
+                app.style.display = 'none';
+                orderList.style.display = 'flex';
+                orderList.innerHTML = '<h2>Your Order</h2>';
+                Object.values(cart).forEach(item => {
+                    const orderItem = document.createElement('div');
+                    orderItem.className = 'order-item';
+                    orderItem.innerHTML = `
+                        <div class="product-name">${item.name}</div>
+                        <div class="product-price">$${item.price.toFixed(2)} x ${item.quantity}</div>
+                    `;
+                    orderList.appendChild(orderItem);
+                });
+                const backButton = document.createElement('button');
+                backButton.className = 'view-order-btn';
+                backButton.innerText = 'Back to Products';
+                backButton.onclick = () => {
+                    orderList.style.display = 'none';
+                    app.style.display = 'block';
+                };
+                orderList.appendChild(backButton);
+                document.body.appendChild(orderList);
+            };
+
+            loadProducts();
+        });
+        $(document).on('click', '.buy-btn', function() {
+            alert("hello gusy");
+       // handleBack();
+    });
+    </script>
+</body>
+</html>
