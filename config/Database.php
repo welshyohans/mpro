@@ -3,19 +3,31 @@
 
 class Database{
 
-    //db params
-   // private $host = 'localhost';
-   // private $db_name = 'ngus_merkato';
-    //private $username = 'root';
-    //private $password = '';
-
-        //db params
-        private $host = '109.70.148.60';
-        private $db_name = 'kulushrk_ngus_merkato';
-        private $username = 'kulushrk_welsh';
-        private $password = 'w#t59Ud13';
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
 
     private $conn;
+
+    public function __construct()
+    {
+        $this->host = $this->getRequiredEnv('DB_HOST');
+        $this->db_name = $this->getRequiredEnv('DB_NAME');
+        $this->username = $this->getRequiredEnv('DB_USERNAME');
+        $this->password = $this->getRequiredEnv('DB_PASSWORD');
+    }
+
+    private function getRequiredEnv($key)
+    {
+        $value = getenv($key);
+
+        if ($value === false || $value === '') {
+            throw new RuntimeException("Environment variable {$key} is not set.");
+        }
+
+        return $value;
+    }
 
     public function connect(){
 

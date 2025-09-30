@@ -1,21 +1,56 @@
 <?php
 
 class SMS{
-    
+
+    private $apiSendUrl;
+    private $apiBulkSendUrl;
+    private $apiToken;
+    private $from;
+    private $sender;
+    private $callback;
+    private $statusCallback;
+    private $createCallback;
+    private $campaign;
+
+    public function __construct()
+    {
+        $this->apiSendUrl = $this->getRequiredEnv('SMS_API_SEND_URL');
+        $this->apiBulkSendUrl = $this->getRequiredEnv('SMS_API_BULK_URL');
+        $this->apiToken = $this->getRequiredEnv('SMS_API_TOKEN');
+        $this->from = getenv('SMS_FROM_ID');
+        $this->from = $this->from === false ? '' : $this->from;
+        $this->sender = $this->getRequiredEnv('SMS_SENDER_ID');
+        $this->callback = getenv('SMS_CALLBACK_URL') ?: '';
+        $this->statusCallback = getenv('SMS_STATUS_CALLBACK') ?: '';
+        $this->createCallback = getenv('SMS_CREATE_CALLBACK') ?: '';
+        $this->campaign = getenv('SMS_DEFAULT_CAMPAIGN') ?: 'Fist campain';
+    }
+
+    private function getRequiredEnv($key)
+    {
+        $value = getenv($key);
+
+        if ($value === false || $value === '') {
+            throw new RuntimeException("Environment variable {$key} is not set.");
+        }
+
+        return $value;
+    }
+
     public function sendSms($tt,$mm){ /** We use php cURL for the samples **/
 
  /** We use php cURL for the samples **/
     $ch = curl_init();
     // base url
-	$url = 'https://api.afromessage.com/api/send';
-	$token = 'eyJhbGciOiJIUzI1NiJ9.eyJpZGVudGlmaWVyIjoiSlVuQWVlTzNZY0hET0UwbVpYNTJOcFA5WFlTMFc4MUMiLCJleHAiOjE4NzY1MDQ5MDIsImlhdCI6MTcxODczODUwMiwianRpIjoiN2Y1ZDQ1NWYtY2VlMC00OTBjLTljNjQtNzYwYjk4NjcwNDkyIn0.3in0WJhVcJnjj0x7juKzhZrVbowZFQHlZ8tZytBmNPY';
-    $from = '';
-    $sender = 'Merkato Pro';
-	$to = $tt;
-	$message = $mm;
-	$callback = '';
+        $url = $this->apiSendUrl;
+        $token = $this->apiToken;
+    $from = $this->from;
+    $sender = $this->sender;
+        $to = $tt;
+        $message = $mm;
+        $callback = $this->callback;
     // request body
-	$body = array("from" => $from,"sender" => $sender,"to" => $to,"message" => $message,"callback"=>$callback);
+        $body = array("from" => $from,"sender" => $sender,"to" => $to,"message" => $message,"callback"=>$callback);
 	
     /** configure request **/
 	curl_setopt($ch, CURLOPT_URL, $url);
@@ -63,15 +98,15 @@ class SMS{
              /** We use php cURL for the samples **/
     $ch = curl_init();
     // base url
-	$url = 'https://api.afromessage.com/api/bulk_send';
-	$token = 'eyJhbGciOiJIUzI1NiJ9.eyJpZGVudGlmaWVyIjoiSlVuQWVlTzNZY0hET0UwbVpYNTJOcFA5WFlTMFc4MUMiLCJleHAiOjE4NzY1MDQ5MDIsImlhdCI6MTcxODczODUwMiwianRpIjoiN2Y1ZDQ1NWYtY2VlMC00OTBjLTljNjQtNzYwYjk4NjcwNDkyIn0.3in0WJhVcJnjj0x7juKzhZrVbowZFQHlZ8tZytBmNPY';
-    $from = 'e80ad9d8-adf3-463f-80f4-7c4b39f7f164';
-    $sender = 'Merkato Pro';
+        $url = $this->apiBulkSendUrl;
+        $token = $this->apiToken;
+    $from = $this->from;
+    $sender = $this->sender;
 	$to = ['+251943080871','+251930694101','+251979149445','+251921923976','+251921538686','+251984722935','+251979300009','+251932219305','+2519941080475','+251951075409','+251943090921','+251911771486','+251922449334'];
 	$message = 'ከጥቂት ሰዓት ቦኋላ ወደ ሳሪስ እቃ እናደርሳለን። የምትፈልጉት እቃ ካለ ማዘዝ ትችላላቹ።';   
-	$camp = 'Fist campain';
-    $scb = '';
-    $ccb = '';
+        $camp = $this->campaign;
+    $scb = $this->statusCallback;
+    $ccb = $this->createCallback;
     // request body
 	$body = array("from" => $from,"sender" => $sender,"to" => $to,"message" => $message,"campaign"=>$camp,"statusCallback"=>$scb,"createCallback"=>$ccb);
 	
@@ -83,7 +118,7 @@ class SMS{
 
     /** request headers **/
 	$headers = array();
-	$headers[] = 'Authorization: Bearer '.$token;
+        $headers[] = 'Authorization: Bearer '.$token;
 	$headers[] = 'Content-Type: application/json';
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -120,15 +155,15 @@ class SMS{
              /** We use php cURL for the samples **/
     $ch = curl_init();
     // base url
-	$url = 'https://api.afromessage.com/api/bulk_send';
-	$token = 'eyJhbGciOiJIUzI1NiJ9.eyJpZGVudGlmaWVyIjoiSlVuQWVlTzNZY0hET0UwbVpYNTJOcFA5WFlTMFc4MUMiLCJleHAiOjE4NzY1MDQ5MDIsImlhdCI6MTcxODczODUwMiwianRpIjoiN2Y1ZDQ1NWYtY2VlMC00OTBjLTljNjQtNzYwYjk4NjcwNDkyIn0.3in0WJhVcJnjj0x7juKzhZrVbowZFQHlZ8tZytBmNPY';
-    $from = 'e80ad9d8-adf3-463f-80f4-7c4b39f7f164';
-    $sender = 'Merkato Pro';
+        $url = $this->apiBulkSendUrl;
+        $token = $this->apiToken;
+    $from = $this->from;
+    $sender = $this->sender;
 	$to = $phones;
 	$message = $m;  
-	$camp = 'Fist campain';
-    $scb = '';
-    $ccb = '';
+        $camp = $this->campaign;
+    $scb = $this->statusCallback;
+    $ccb = $this->createCallback;
     // request body
 	$body = array("from" => $from,"sender" => $sender,"to" => $to,"message" => $message,"campaign"=>$camp,"statusCallback"=>$scb,"createCallback"=>$ccb);
 	
